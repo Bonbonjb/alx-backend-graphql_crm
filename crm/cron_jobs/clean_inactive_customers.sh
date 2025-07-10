@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# Get absolute path to the directory this script lives in
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR/../.."
+cd "$PROJECT_ROOT"
+
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
-cd /home/brendajb/alx-backend-graphql_crm
 
 DELETED_COUNT=$(python3 manage.py shell -c "
 from django.utils import timezone
