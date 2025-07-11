@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from crm.models import Product  # Assuming Product model exists
+from crm.models import Product
 
 class ProductType(DjangoObjectType):
     class Meta:
@@ -9,7 +9,7 @@ class ProductType(DjangoObjectType):
 
 class UpdateLowStockProducts(graphene.Mutation):
     class Arguments:
-        pass  # No arguments required
+        pass
 
     updated_products = graphene.List(ProductType)
     message = graphene.String()
@@ -28,7 +28,12 @@ class UpdateLowStockProducts(graphene.Mutation):
             message=f"{len(updated_list)} products restocked successfully"
         )
 
+# ✅ Fix: Define a basic Query class
+class Query(graphene.ObjectType):
+    hello = graphene.String(default_value="Hello, GraphQL!")
+
 class Mutation(graphene.ObjectType):
     update_low_stock_products = UpdateLowStockProducts.Field()
 
+# ✅ Final schema declaration
 schema = graphene.Schema(query=Query, mutation=Mutation)
