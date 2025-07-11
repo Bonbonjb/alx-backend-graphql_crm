@@ -11,7 +11,7 @@ def log_crm_heartbeat():
 
     # Set up GraphQL transport
     transport = RequestsHTTPTransport(
-        url='http://localhost:8000/graphql',
+        url='http://localhost:8000/graphql/',
         verify=True,
         retries=3,
     )
