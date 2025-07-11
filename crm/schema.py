@@ -2,38 +2,44 @@ import graphene
 from graphene_django import DjangoObjectType
 from crm.models import Product
 
+# GraphQL Type for Product
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = ("id", "name", "stock")
 
+# Mutation: Update low-stock products
 class UpdateLowStockProducts(graphene.Mutation):
-    class Arguments:
-        pass
-
     updated_products = graphene.List(ProductType)
     message = graphene.String()
 
     def mutate(self, info):
         low_stock_products = Product.objects.filter(stock__lt=10)
-        updated_list = []
+        updated = []
 
         for product in low_stock_products:
             product.stock += 10
             product.save()
-            updated_list.append(product)
+            updated.append(product)
 
         return UpdateLowStockProducts(
-            updated_products=updated_list,
-            message=f"{len(updated_list)} products restocked successfully"
+            updated_products=updated,
+            message=f"{len(updated)} products restocked successfully."
         )
 
-# ✅ Fix: Define a basic Query class
+# Root Query
 class Query(graphene.ObjectType):
-    hello = graphene.String(default_value="Hello, GraphQL!")
+    products = graphene.List(ProductType)
 
+<<<<<<< HEAD
 class mutation(graphene.ObjectType):
+
+    def resolve_products(self, info):
+        return Product.objects.all()
+
+# Root Mutation
+class Mutation(graphene.ObjectType):
     update_low_stock_products = UpdateLowStockProducts.Field()
 
-# ✅ Final schema declaration
+# Final schema
 schema = graphene.Schema(query=Query, mutation=Mutation)
