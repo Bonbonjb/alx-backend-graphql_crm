@@ -2,6 +2,7 @@ from django.urls import path
 from graphene_django.views import GraphQLView
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
+from schema import schema  # adjust import path if it's in a different module
 
 urlpatterns = [
     path('admin/', admin.site.urls),
