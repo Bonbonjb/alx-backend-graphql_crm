@@ -7,7 +7,7 @@ class ProductType(DjangoObjectType):
         model = Product
         fields = ("id", "name", "stock")
 
-class UpdateLowStockProducts(graphene.Mutation):
+class UpdateLowStockProducts(graphene.mutation):
     class Arguments:
         pass
 
@@ -32,8 +32,8 @@ class UpdateLowStockProducts(graphene.Mutation):
 class Query(graphene.ObjectType):
     hello = graphene.String(default_value="Hello, GraphQL!")
 
-class Mutation(graphene.ObjectType):
+class mutation(graphene.ObjectType):
     update_low_stock_products = UpdateLowStockProducts.Field()
 
 # ✅ Final schema declaration
-schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=mutation)
