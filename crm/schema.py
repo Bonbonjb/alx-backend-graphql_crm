@@ -36,4 +36,4 @@ class mutation(graphene.ObjectType):
     update_low_stock_products = UpdateLowStockProducts.Field()
 
 # ✅ Final schema declaration
-schema = graphene.schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=Mutation)
