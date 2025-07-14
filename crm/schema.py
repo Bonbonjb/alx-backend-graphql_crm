@@ -31,7 +31,6 @@ class UpdateLowStockProducts(graphene.Mutation):
 class Query(graphene.ObjectType):
     products = graphene.List(ProductType)
 
-<<<<<<< HEAD
 class mutation(graphene.ObjectType):
 
     def resolve_products(self, info):
