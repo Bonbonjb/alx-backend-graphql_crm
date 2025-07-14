@@ -1,2 +1,3 @@
 django-crontab==0.7.1
 graphene-django
+celery
