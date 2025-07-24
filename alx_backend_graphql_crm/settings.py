@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--s3r&)+r%&s219w_8&yeu6_rxr3^a20fnci**6oioq13eo_dz2'
+SECRET_KEY = 'django-insecure-ig*_)525!ai=r490cy0eun6ni%th%$v6=bmv0y(w_ra!kjjyft'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crm',
+    'graphene_django',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +123,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GRAPHENE = {
+    "SCHEMA": "alx_backend_graphql_crm.schema.schema"
+}
