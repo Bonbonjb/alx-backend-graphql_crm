@@ -125,6 +125,8 @@ class UpdateLowStockProducts(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
+    create_product = CreateProduct.Field()
+    create_order = CreateOrder.Field()
     bulk_create_customers = BulkCreateCustomers.Field()
     update_low_stock_products = UpdateLowStockProducts.Field()
 
