@@ -1,76 +1,57 @@
-import requests
+#!/usr/bin/env python3
+
 from datetime import datetime
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
 def log_crm_heartbeat():
     timestamp = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
-    log_file = "/tmp/crm_heartbeat_log.txt"
+    log_message = f"{timestamp} CRM is alive\n"
 
-    # Default message
-    message = f"{timestamp} CRM is alive"
+    # Write heartbeat message
+    with open("/tmp/crm_heartbeat_log.txt", "a") as log_file:
+        log_file.write(log_message)
 
-    # Set up GraphQL transport
-    transport = RequestsHTTPTransport(
-        url='http://localhost:8000/graphql/',
-        verify=True,
-        retries=3,
-    )
-
-    client = Client(transport=transport, fetch_schema_from_transport=False)
-
-    # Define hello query
-    query = gql("""
-    query {
-        hello
-    }
-    """)
-
+    # Optional GraphQL hello check
     try:
-        result = client.execute(query)
-        hello_response = result.get("hello", "No hello response")
-        message += f" | GraphQL says: {hello_response}"
-    except Exception as e:
-        message += f" | GraphQL ERROR: {str(e)}"
+        transport = RequestsHTTPTransport(url="http://localhost:8000/graphql", verify=True, retries=2)
+        client = Client(transport=transport, fetch_schema_from_transport=False)
 
-    # Write to log file
-    with open(log_file, "a") as f:
-        f.write(message + "\n")
+        query = gql("{ hello }")
+        result = client.execute(query)
+
+        with open("/tmp/crm_heartbeat_log.txt", "a") as log_file:
+            log_file.write(f"{timestamp} GraphQL hello response: {result.get('hello')}\n")
+
+    except Exception as e:
+        with open("/tmp/crm_heartbeat_log.txt", "a") as log_file:
+            log_file.write(f"{timestamp} GraphQL hello check failed: {str(e)}\n")
 
 def update_low_stock():
-    log_file = "/tmp/low_stock_updates_log.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    transport = RequestsHTTPTransport(
-        url='http://localhost:8000/graphql',
-        verify=True,
-        retries=3,
-    )
-
-    client = Client(transport=transport, fetch_schema_from_transport=False)
-
-    mutation = gql("""
-    mutation {
-        updateLowStockProducts {
-            message
-            updatedProducts {
-                id
-                name
-                stock
-            }
-        }
-    }
-    """)
+    log_file_path = "/tmp/low_stock_updates_log.txt"
 
     try:
-        result = client.execute(mutation)
-        updates = result["updateLowStockProducts"]["updatedProducts"]
-        message = result["updateLowStockProducts"]["message"]
+        transport = RequestsHTTPTransport(url="http://localhost:8000/graphql", verify=True, retries=2)
+        client = Client(transport=transport, fetch_schema_from_transport=False)
 
-        with open(log_file, "a") as log:
-            log.write(f"{timestamp} - {message}\n")
-            for product in updates:
-                log.write(f" - {product['name']} restocked to {product['stock']}\n")
+        mutation = gql("""
+            mutation {
+                updateLowStockProducts {
+                    updatedProducts
+                    message
+                }
+            }
+        """)
+
+        result = client.execute(mutation)
+        updated_products = result["updateLowStockProducts"]["updatedProducts"]
+
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"{timestamp} - {result['updateLowStockProducts']['message']}\n")
+            for product in updated_products:
+                log_file.write(f"{timestamp} - {product}\n")
+
     except Exception as e:
-        with open(log_file, "a") as log:
-            log.write(f"{timestamp} - GraphQL ERROR: {str(e)}\n")
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"{timestamp} - Low stock update failed: {str(e)}\n")
