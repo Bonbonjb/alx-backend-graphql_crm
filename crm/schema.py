@@ -6,6 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from .models import Customer, Product, Order
 from .filters import CustomerFilter, ProductFilter, OrderFilter
 from crm.schema import Query as CrmQuery
+from crm.models import Product
 
 # --------------------
 # GraphQL Object Types
