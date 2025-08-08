@@ -1,6 +1,6 @@
 from celery import shared_task
 import requests
-import datetime
+from datetime import datetime
 
 @shared_task
 def generate_crm_report():
